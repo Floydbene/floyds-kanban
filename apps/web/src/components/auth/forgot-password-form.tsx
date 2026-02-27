@@ -3,13 +3,12 @@ import { Link } from 'react-router'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useAuth } from '@/providers/auth-provider'
+import { supabase } from '@/lib/supabase'
 
-export function LoginForm() {
-  const { login } = useAuth()
+export function ForgotPasswordForm() {
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
 
   async function handleSubmit(e: FormEvent) {
@@ -17,12 +16,29 @@ export function LoginForm() {
     setError(null)
     setLoading(true)
     try {
-      await login(email, password)
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + '/reset-password',
+      })
+      if (error) throw new Error(error.message)
+      setSuccess(true)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed')
+      setError(err instanceof Error ? err.message : 'Failed to send reset link')
     } finally {
       setLoading(false)
     }
+  }
+
+  if (success) {
+    return (
+      <div className="flex flex-col gap-4 text-center">
+        <p className="text-sm text-muted-foreground">
+          Check your email for a password reset link. It may take a minute to arrive.
+        </p>
+        <Link to="/login" className="text-sm text-primary hover:underline">
+          Back to sign in
+        </Link>
+      </div>
+    )
   }
 
   return (
@@ -40,36 +56,18 @@ export function LoginForm() {
         />
       </div>
 
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between">
-          <Label htmlFor="password">Password</Label>
-          <Link to="/forgot-password" className="text-xs text-muted-foreground hover:text-primary hover:underline">
-            Forgot password?
-          </Link>
-        </div>
-        <Input
-          id="password"
-          type="password"
-          placeholder="••••••••"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          autoComplete="current-password"
-        />
-      </div>
-
       {error && (
         <p className="text-sm text-destructive">{error}</p>
       )}
 
       <Button type="submit" disabled={loading} className="w-full">
-        {loading ? 'Signing in...' : 'Sign in'}
+        {loading ? 'Sending...' : 'Send reset link'}
       </Button>
 
       <p className="text-center text-sm text-muted-foreground">
-        Don&apos;t have an account?{' '}
-        <Link to="/register" className="text-primary hover:underline">
-          Sign up
+        Remember your password?{' '}
+        <Link to="/login" className="text-primary hover:underline">
+          Sign in
         </Link>
       </p>
     </form>
