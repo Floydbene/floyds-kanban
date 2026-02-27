@@ -1,0 +1,114 @@
+version: "3"
+
+dotenv: [".env"]
+
+vars:
+  API_DIR: apps/api
+  WEB_DIR: apps/web
+
+tasks:
+  # ── Setup ──────────────────────────────────────────────
+  install:
+    desc: Install all dependencies
+    cmds:
+      - pnpm install
+
+  setup:
+    desc: Full project setup (install, push schema, seed)
+    cmds:
+      - task: install
+      - task: db:push
+      - task: db:seed
+
+  # ── Development ────────────────────────────────────────
+  dev:
+    desc: Start API and web dev servers
+    cmds:
+      - pnpm dev
+
+  dev:api:
+    desc: Start only the API dev server
+    dir: "{{.API_DIR}}"
+    cmds:
+      - pnpm dev
+
+  dev:web:
+    desc: Start only the web dev server
+    dir: "{{.WEB_DIR}}"
+    cmds:
+      - pnpm dev
+
+  # ── Build ──────────────────────────────────────────────
+  build:
+    desc: Build all packages
+    cmds:
+      - pnpm build
+
+  build:api:
+    desc: Build the API
+    dir: "{{.API_DIR}}"
+    cmds:
+      - pnpm build
+
+  build:web:
+    desc: Build the web frontend
+    dir: "{{.WEB_DIR}}"
+    cmds:
+      - pnpm build
+
+  # ── Lint / Typecheck ───────────────────────────────────
+  lint:
+    desc: Type-check all packages
+    cmds:
+      - pnpm lint
+
+  lint:api:
+    desc: Type-check the API
+    dir: "{{.API_DIR}}"
+    cmds:
+      - pnpm lint
+
+  lint:web:
+    desc: Type-check the web frontend
+    dir: "{{.WEB_DIR}}"
+    cmds:
+      - tsc -b --noEmit
+
+  # ── Database ───────────────────────────────────────────
+  db:push:
+    desc: Push Drizzle schema to database
+    dir: "{{.API_DIR}}"
+    cmds:
+      - pnpm db:push
+
+  db:generate:
+    desc: Generate Drizzle migration files
+    dir: "{{.API_DIR}}"
+    cmds:
+      - pnpm db:generate
+
+  db:migrate:
+    desc: Run Drizzle migrations
+    dir: "{{.API_DIR}}"
+    cmds:
+      - pnpm db:migrate
+
+  db:seed:
+    desc: Seed database with sample data
+    dir: "{{.API_DIR}}"
+    cmds:
+      - pnpm db:seed
+
+  db:studio:
+    desc: Open Drizzle Studio (database GUI)
+    dir: "{{.API_DIR}}"
+    cmds:
+      - npx drizzle-kit studio
+
+  # ── Utilities ──────────────────────────────────────────
+  clean:
+    desc: Remove node_modules, dist, and turbo cache
+    cmds:
+      - rm -rf node_modules apps/*/node_modules packages/*/node_modules
+      - rm -rf apps/*/dist packages/*/dist
+      - rm -rf .turbo apps/*/.turbo packages/*/.turbo
