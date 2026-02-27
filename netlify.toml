@@ -1,10 +1,13 @@
 [build]
   base = "/"
-  command = "pnpm install && pnpm build"
+  command = "pnpm install && pnpm --filter @taskflow/shared build && pnpm --filter @taskflow/web build"
   publish = "apps/web/dist"
 
 [build.environment]
   NODE_VERSION = "20"
+  # Allow expected client-side env vars in build output
+  SECRETS_SCAN_OMIT_KEYS = "VITE_SUPABASE_URL,VITE_SUPABASE_ANON_KEY,VITE_API_URL,API_PORT"
+  SECRETS_SCAN_OMIT_PATHS = "apps/api"
 
 # SPA — route all paths to index.html
 [[redirects]]
