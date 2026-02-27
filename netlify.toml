@@ -1,0 +1,13 @@
+[build]
+  base = "/"
+  command = "pnpm install && pnpm build"
+  publish = "apps/web/dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# SPA — route all paths to index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
