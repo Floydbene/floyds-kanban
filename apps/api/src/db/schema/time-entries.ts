@@ -1,6 +1,6 @@
 import { pgTable, uuid, varchar, integer, timestamp, index } from 'drizzle-orm/pg-core';
-import { tasks } from './tasks';
-import { users } from './users';
+import { tasks } from './tasks.js';
+import { users } from './users.js';
 
 export const timeEntries = pgTable('time_entries', {
   id: uuid('id').primaryKey().defaultRandom(),

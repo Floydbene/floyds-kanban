@@ -1,6 +1,6 @@
 import { pgTable, uuid, primaryKey, index } from 'drizzle-orm/pg-core';
-import { tasks } from './tasks';
-import { labels } from './labels';
+import { tasks } from './tasks.js';
+import { labels } from './labels.js';
 
 export const taskLabels = pgTable('task_labels', {
   taskId: uuid('task_id').notNull().references(() => tasks.id, { onDelete: 'cascade' }),

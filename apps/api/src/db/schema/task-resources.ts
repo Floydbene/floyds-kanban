@@ -1,5 +1,5 @@
 import { pgTable, uuid, varchar, text, timestamp, index } from 'drizzle-orm/pg-core';
-import { tasks } from './tasks';
+import { tasks } from './tasks.js';
 
 export const taskResources = pgTable('task_resources', {
   id: uuid('id').primaryKey().defaultRandom(),

@@ -1,5 +1,5 @@
 import { pgTable, uuid, varchar, boolean, integer, index } from 'drizzle-orm/pg-core';
-import { tasks } from './tasks';
+import { tasks } from './tasks.js';
 
 export const subtasks = pgTable('subtasks', {
   id: uuid('id').primaryKey().defaultRandom(),

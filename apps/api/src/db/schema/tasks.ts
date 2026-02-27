@@ -1,8 +1,8 @@
 import { pgTable, uuid, varchar, text, integer, boolean, timestamp, index } from 'drizzle-orm/pg-core';
-import { taskPriorityEnum, taskTypeEnum, taskResolutionEnum } from './enums';
-import { columns } from './columns';
-import { projects } from './projects';
-import { users } from './users';
+import { taskPriorityEnum, taskTypeEnum, taskResolutionEnum } from './enums.js';
+import { columns } from './columns.js';
+import { projects } from './projects.js';
+import { users } from './users.js';
 
 export const tasks = pgTable('tasks', {
   id: uuid('id').primaryKey().defaultRandom(),
