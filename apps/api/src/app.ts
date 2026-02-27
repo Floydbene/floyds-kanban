@@ -21,7 +21,11 @@ export function createApp() {
   const app = express();
 
   // Middleware
-  app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+  const allowedOrigins = [
+    'http://localhost:5173',
+    process.env.CORS_ORIGIN,
+  ].filter(Boolean) as string[];
+  app.use(cors({ origin: allowedOrigins, credentials: true }));
   app.use(helmet());
   app.use(morgan('dev'));
   app.use(express.json());
